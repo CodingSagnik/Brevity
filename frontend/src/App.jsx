@@ -357,9 +357,27 @@ export default function App() {
 
               <Box sx={{ mt: 6, textAlign: "center" }}>
                 <Chip
-                  label="Node · Express · MongoDB · Redis"
+                  label={
+                    <Box component="span" sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                      <Box
+                        component="span"
+                        sx={{
+                          fontStyle: "italic",
+                          fontWeight: 400,
+                          fontSize: "0.62rem",
+                          letterSpacing: "0.04em",
+                          opacity: 0.7,
+                        }}
+                      >
+                        Powered by
+                      </Box>
+                      <Box component="span" sx={{ fontWeight: 700, fontSize: "0.7rem" }}>
+                        Node · Express · MongoDB · Redis
+                      </Box>
+                    </Box>
+                  }
                   size="small"
-                  sx={{ color: "text.secondary", fontSize: "0.7rem" }}
+                  sx={{ color: "text.secondary", height: "auto", py: "4px" }}
                 />
               </Box>
             </Container>
