@@ -24,24 +24,32 @@ app.use(express.urlencoded({ extended: true }));
 // ─── MongoDB Connection ───────────────────────────────────────────────────────
 // When running inside Docker Compose, "mongodb" resolves via Docker's internal
 // DNS to the mongodb service container — no hardcoded IP needed.
-const connectDB = async () => {
+const connectDB = async (retries = 5, delayMs = 3000) => {
   const uri = process.env.MONGO_URI;
 
   if (!uri) {
-    console.error("MONGO_URI is not defined. Check your .env file.");
+    console.error("MONGO_URI is not defined. Check your environment variables.");
     process.exit(1);
   }
 
-  try {
-    await mongoose.connect(uri, {
-      // Mongoose 8 no longer needs useNewUrlParser / useUnifiedTopology
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    console.log(`MongoDB connected: ${mongoose.connection.host}`);
-  } catch (err) {
-    console.error("MongoDB connection error:", err.message);
-    process.exit(1);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 30000, // 30s — gives DNS SRV lookup time to resolve
+        connectTimeoutMS:         30000,
+        socketTimeoutMS:          45000,
+      });
+      console.log(`MongoDB connected: ${mongoose.connection.host}`);
+      return; // success — stop retrying
+    } catch (err) {
+      console.error(`MongoDB connection attempt ${attempt}/${retries} failed: ${err.message}`);
+      if (attempt === retries) {
+        console.error("All MongoDB connection attempts exhausted. Exiting.");
+        process.exit(1);
+      }
+      console.log(`Retrying in ${delayMs / 1000}s…`);
+      await new Promise((res) => setTimeout(res, delayMs));
+    }
   }
 };
 
