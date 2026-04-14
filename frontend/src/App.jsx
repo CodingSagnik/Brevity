@@ -29,12 +29,7 @@ import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import AuthModal from "./components/AuthModal";
 import Dashboard from "./components/Dashboard";
-
-// Theme and CssBaseline now live in ThemeContext → ThemeModeProvider.
-// App.jsx is a pure presentation tree; it reads the active theme via
-// useTheme() wherever it needs to branch on light vs dark.
-
-const API_BASE = "/api";
+import { API_BASE } from "./config/api";
 
 // ─── ResultCard ───────────────────────────────────────────────────────────────
 

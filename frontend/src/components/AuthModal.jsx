@@ -20,7 +20,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LinkIcon from "@mui/icons-material/Link";
 import { useAuth } from "../context/AuthContext";
 
-const API_BASE = "/api";
+import { API_BASE } from "../config/api";
 
 const INITIAL_FORM = { email: "", password: "", confirmPassword: "" };
 

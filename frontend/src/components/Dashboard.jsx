@@ -37,7 +37,7 @@ import InboxIcon from "@mui/icons-material/Inbox";
 
 import { useAuth } from "../context/AuthContext";
 
-const API_BASE = "/api";
+import { API_BASE } from "../config/api";
 const PAGE_SIZE = 10;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

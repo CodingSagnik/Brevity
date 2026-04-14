@@ -1,0 +1,63 @@
+# render.yaml — Render Infrastructure as Code
+#
+# Defines both services so Render can detect and configure them automatically
+# when you connect the GitHub repo via the Render Blueprint flow.
+#
+# Deploy order:
+#   1. brevity-backend  →  note the public URL it gets
+#   2. Set VITE_API_URL in brevity-frontend to that URL in the Render dashboard
+#   3. Trigger a manual redeploy of brevity-frontend
+
+services:
+
+  # ── Backend — Node.js / Express API ───────────────────────────────────────
+  - type: web
+    name: brevity-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: ""          # uses CMD from Dockerfile (node server.js)
+    buildFilter:
+      paths:
+        - backend/**
+    region: singapore
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5000"
+      - key: MONGO_URI
+        sync: false            # set manually in dashboard — never commit secrets
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CACHE_TTL_SECONDS
+        value: "86400"
+      - key: BASE_URL
+        sync: false            # set to https://brevity-backend.onrender.com after deploy
+      - key: CLIENT_ORIGIN
+        sync: false            # set to https://brevity-frontend.onrender.com after deploy
+
+  # ── Frontend — React / Vite Static Site ───────────────────────────────────
+  - type: web
+    name: brevity-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    buildFilter:
+      paths:
+        - frontend/**
+    region: singapore
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        sync: false            # set to https://brevity-backend.onrender.com after backend deploys
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html  # SPA client-side routing fallback
