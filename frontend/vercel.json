@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://brevity-backend-sea3.onrender.com/api/:path*"
+    },
+    {
+      "source": "/:shortId([a-zA-Z0-9]{6})",
+      "destination": "https://brevity-backend-sea3.onrender.com/:shortId"
+    }
+  ]
+}
