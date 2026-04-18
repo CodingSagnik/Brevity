@@ -275,8 +275,7 @@ export default function App() {
                   Brevity
                 </Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
-                  {isAuthenticated
-                    "Short links. No fluff."
+                  Short links. No fluff.
                 </Typography>
               </Box>
 
