@@ -276,8 +276,7 @@ export default function App() {
                 </Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                   {isAuthenticated
-                    ? "Shorten a URL — it will be saved to your account."
-                    : "Short links. No fluff."}
+                    "Short links. No fluff."
                 </Typography>
               </Box>
 
